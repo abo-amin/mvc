@@ -1,0 +1,189 @@
+@model JobRecruitment.ViewModels.ProfileViewModel
+
+@{
+    ViewData["Title"] = "My Profile";
+}
+
+<div class="container my-5">
+    <div class="row">
+        <!-- Profile Sidebar -->
+        <div class="col-md-3">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body text-center p-4">
+                    <div class="position-relative mb-3 mx-auto" style="width: 120px; height: 120px;">
+                        <img src="@(string.IsNullOrEmpty(Model.User.ProfileImage) ? "/images/profile-placeholder.png" : Model.User.ProfileImage)" 
+                             alt="Profile Image" class="rounded-circle img-fluid" style="width: 120px; height: 120px; object-fit: cover;">
+                        <a href="@Url.Action("EditProfile", "Account")" class="position-absolute bottom-0 end-0 bg-primary text-white rounded-circle p-1" 
+                           style="width: 32px; height: 32px;" title="Edit Profile">
+                            <i class="bi bi-pencil-fill"></i>
+                        </a>
+                    </div>
+                    <h5 class="mb-1">@Model.User.FirstName @Model.User.LastName</h5>
+                    <p class="text-muted mb-3">@Model.User.Title</p>
+                    <div class="d-flex justify-content-center">
+                        <a href="@Url.Action("Resume", "Account")" class="btn btn-sm btn-outline-primary me-2">
+                            <i class="bi bi-file-earmark-text me-1"></i> View Resume
+                        </a>
+                        <a href="@Url.Action("EditProfile", "Account")" class="btn btn-sm btn-primary">
+                            <i class="bi bi-pencil me-1"></i> Edit Profile
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+            <div class="list-group shadow-sm mb-4">
+                <a href="@Url.Action("Dashboard", "Account")" class="list-group-item list-group-item-action">
+                    <i class="bi bi-speedometer2 me-2"></i> Dashboard
+                </a>
+                <a href="@Url.Action("Profile", "Account")" class="list-group-item list-group-item-action active">
+                    <i class="bi bi-person me-2"></i> My Profile
+                </a>
+                <a href="@Url.Action("Resume", "Account")" class="list-group-item list-group-item-action">
+                    <i class="bi bi-file-earmark-text me-2"></i> Resume
+                </a>
+                <a href="@Url.Action("SavedJobs", "Account")" class="list-group-item list-group-item-action">
+                    <i class="bi bi-bookmark me-2"></i> Saved Jobs <span class="badge bg-primary rounded-pill">@Model.SavedJobsCount</span>
+                </a>
+                <a href="@Url.Action("AppliedJobs", "Account")" class="list-group-item list-group-item-action">
+                    <i class="bi bi-briefcase me-2"></i> Applied Jobs <span class="badge bg-primary rounded-pill">@Model.AppliedJobsCount</span>
+                </a>
+            </div>
+        </div>
+
+        <!-- Profile Main Content -->
+        <div class="col-md-9">
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <h2 class="card-title mb-4">Personal Information</h2>
+                    <div class="row mb-3">
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-1">Full Name</h6>
+                            <p class="mb-0">@Model.User.FirstName @Model.User.LastName</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-1">Email</h6>
+                            <p class="mb-0">@Model.User.Email</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-1">Job Title</h6>
+                            <p class="mb-0">@(string.IsNullOrEmpty(Model.User.Title) ? "Not specified" : Model.User.Title)</p>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <h6 class="text-muted mb-1">Location</h6>
+                            <p class="mb-0">@(string.IsNullOrEmpty(Model.User.Location) ? "Not specified" : Model.User.Location)</p>
+                        </div>
+                        <div class="col-md-12">
+                            <h6 class="text-muted mb-1">Bio</h6>
+                            <p class="mb-0">@(string.IsNullOrEmpty(Model.User.Bio) ? "No bio added yet." : Model.User.Bio)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Skills -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="card-title mb-0">Skills</h2>
+                        <a href="@Url.Action("EditProfile", "Account")" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-plus"></i> Add Skills
+                        </a>
+                    </div>
+                    
+                    @if (Model.Skills != null && Model.Skills.Any())
+                    {
+                        <div class="d-flex flex-wrap">
+                            @foreach (var skill in Model.Skills)
+                            {
+                                <span class="badge bg-light text-dark me-2 mb-2 p-2">@skill.SkillName</span>
+                            }
+                        </div>
+                    }
+                    else
+                    {
+                        <p class="text-muted">No skills added yet. Add skills to highlight your expertise.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Experience -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="card-title mb-0">Work Experience</h2>
+                        <a href="@Url.Action("EditProfile", "Account")" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-plus"></i> Add Experience
+                        </a>
+                    </div>
+                    
+                    @if (Model.Experiences != null && Model.Experiences.Any())
+                    {
+                        @foreach (var exp in Model.Experiences)
+                        {
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="mb-1">@exp.Title</h5>
+                                        <h6 class="mb-1">@exp.Company</h6>
+                                        <p class="text-muted mb-2">
+                                            @exp.StartDate.ToString("MMM yyyy") - 
+                                            @(exp.Current ? "Present" : exp.EndDate?.ToString("MMM yyyy"))
+                                        </p>
+                                        <p class="mb-0">@exp.Description</p>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.Experiences.LastOrDefault() != exp)
+                            {
+                                <hr class="my-4" />
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">No work experience added yet. Add your work history to showcase your professional journey.</p>
+                    }
+                </div>
+            </div>
+
+            <!-- Education -->
+            <div class="card border-0 shadow-sm mb-4">
+                <div class="card-body p-4">
+                    <div class="d-flex justify-content-between align-items-center mb-4">
+                        <h2 class="card-title mb-0">Education</h2>
+                        <a href="@Url.Action("EditProfile", "Account")" class="btn btn-sm btn-outline-primary">
+                            <i class="bi bi-plus"></i> Add Education
+                        </a>
+                    </div>
+                    
+                    @if (Model.Education != null && Model.Education.Any())
+                    {
+                        @foreach (var edu in Model.Education)
+                        {
+                            <div class="mb-4">
+                                <div class="d-flex justify-content-between align-items-start">
+                                    <div>
+                                        <h5 class="mb-1">@edu.Degree</h5>
+                                        <h6 class="mb-1">@edu.School</h6>
+                                        <p class="text-muted mb-2">
+                                            @edu.StartDate.ToString("yyyy") - @edu.EndDate.ToString("yyyy")
+                                        </p>
+                                        <p class="mb-0">@edu.Description</p>
+                                    </div>
+                                </div>
+                            </div>
+                            @if (Model.Education.LastOrDefault() != edu)
+                            {
+                                <hr class="my-4" />
+                            }
+                        }
+                    }
+                    else
+                    {
+                        <p class="text-muted">No education history added yet. Add your educational background to showcase your qualifications.</p>
+                    }
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

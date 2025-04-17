@@ -1,0 +1,67 @@
+@model LoginViewModel
+@{
+    ViewData["Title"] = "Login";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-6 col-lg-5">
+            <div class="card shadow">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 mb-3 fw-normal">Welcome Back</h1>
+                        <p class="text-muted">Enter your credentials to access your account</p>
+                    </div>
+
+                    <form asp-action="Login" method="post">
+                        <input type="hidden" name="ReturnUrl" value="@ViewData["ReturnUrl"]" />
+                        <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                        <div class="form-floating mb-3">
+                            <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                            <label asp-for="Email">Email address</label>
+                            <span asp-validation-for="Email" class="text-danger"></span>
+                        </div>
+                        
+                        <div class="form-floating mb-3">
+                            <input asp-for="Password" class="form-control" placeholder="Password" />
+                            <label asp-for="Password">Password</label>
+                            <span asp-validation-for="Password" class="text-danger"></span>
+                        </div>
+
+                        <div class="d-flex justify-content-between align-items-center mb-4">
+                            <div class="form-check">
+                                <input asp-for="RememberMe" class="form-check-input" />
+                                <label asp-for="RememberMe" class="form-check-label">Remember me</label>
+                            </div>
+                            <a asp-action="ForgotPassword" class="text-success text-decoration-none small">Forgot password?</a>
+                        </div>
+
+                        <button class="w-100 btn btn-lg btn-success mb-3" type="submit">Sign In</button>
+                        
+                        <div class="text-center mb-3">
+                            <span class="text-muted">Or continue with</span>
+                        </div>
+                        
+                        <div class="d-grid gap-2 mb-4">
+                            <button type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-facebook me-2"></i> Facebook
+                            </button>
+                            <button type="button" class="btn btn-outline-secondary">
+                                <i class="bi bi-google me-2"></i> Google
+                            </button>
+                        </div>
+                        
+                        <div class="text-center">
+                            <p class="mb-0">Don't have an account? <a asp-action="Register" class="text-success">Sign up</a></p>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

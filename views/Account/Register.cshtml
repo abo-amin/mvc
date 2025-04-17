@@ -1,0 +1,166 @@
+@model RegisterViewModel
+@{
+    ViewData["Title"] = "Register";
+}
+
+<div class="container py-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card shadow">
+                <div class="card-body p-4 p-md-5">
+                    <div class="text-center mb-4">
+                        <h1 class="h3 mb-3 fw-normal">Create an Account</h1>
+                        <p class="text-muted">Join Job Magnet to find your dream job or hire top talent</p>
+                    </div>
+
+                    <ul class="nav nav-pills nav-justified mb-4" id="accountTypeTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="jobseeker-tab" data-bs-toggle="pill" data-bs-target="#jobseeker" type="button" role="tab" aria-controls="jobseeker" aria-selected="true">
+                                <i class="bi bi-person me-2"></i> Job Seeker
+                            </button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="employer-tab" data-bs-toggle="pill" data-bs-target="#employer" type="button" role="tab" aria-controls="employer" aria-selected="false">
+                                <i class="bi bi-building me-2"></i> Employer
+                            </button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content" id="accountTypeContent">
+                        <div class="tab-pane fade show active" id="jobseeker" role="tabpanel" aria-labelledby="jobseeker-tab">
+                            <form asp-action="Register" method="post">
+                                <input type="hidden" name="UserRole" value="jobseeker" />
+                                <div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3 mb-md-0">
+                                            <input asp-for="FirstName" class="form-control" placeholder="First Name" />
+                                            <label asp-for="FirstName">First Name</label>
+                                            <span asp-validation-for="FirstName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="LastName" class="form-control" placeholder="Last Name" />
+                                            <label asp-for="LastName">Last Name</label>
+                                            <span asp-validation-for="LastName" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input asp-for="Email" class="form-control" placeholder="name@example.com" />
+                                    <label asp-for="Email">Email address</label>
+                                    <span asp-validation-for="Email" class="text-danger"></span>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3 mb-md-0">
+                                            <input asp-for="Password" class="form-control" placeholder="Password" />
+                                            <label asp-for="Password">Password</label>
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input asp-for="ConfirmPassword" class="form-control" placeholder="Confirm Password" />
+                                            <label asp-for="ConfirmPassword">Confirm Password</label>
+                                            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-check mb-4">
+                                    <input asp-for="AgreeToTerms" class="form-check-input" />
+                                    <label asp-for="AgreeToTerms" class="form-check-label">
+                                        I agree to the <a href="#" class="text-success">Terms of Service</a> and <a href="#" class="text-success">Privacy Policy</a>
+                                    </label>
+                                    <span asp-validation-for="AgreeToTerms" class="text-danger d-block"></span>
+                                </div>
+
+                                <button class="w-100 btn btn-lg btn-success mb-3" type="submit">Create Account</button>
+                            </form>
+                        </div>
+
+                        <div class="tab-pane fade" id="employer" role="tabpanel" aria-labelledby="employer-tab">
+                            <form asp-action="RegisterEmployer" method="post">
+                                <input type="hidden" name="UserRole" value="employer" />
+                                <!-- Similar to jobseeker form but with employer-specific fields -->
+                                <div class="form-floating mb-3">
+                                    <input name="CompanyName" class="form-control" placeholder="Company Name" />
+                                    <label for="CompanyName">Company Name</label>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <input name="Email" class="form-control" placeholder="name@example.com" />
+                                    <label for="Email">Email address</label>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <div class="form-floating mb-3 mb-md-0">
+                                            <input name="Password" type="password" class="form-control" placeholder="Password" />
+                                            <label for="Password">Password</label>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <div class="form-floating">
+                                            <input name="ConfirmPassword" type="password" class="form-control" placeholder="Confirm Password" />
+                                            <label for="ConfirmPassword">Confirm Password</label>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <div class="form-floating mb-3">
+                                    <select name="Industry" class="form-select" id="industry">
+                                        <option selected disabled value="">Select industry</option>
+                                        <option value="Technology">Technology</option>
+                                        <option value="Healthcare">Healthcare</option>
+                                        <option value="Finance">Finance</option>
+                                        <option value="Education">Education</option>
+                                        <option value="Retail">Retail</option>
+                                        <option value="Manufacturing">Manufacturing</option>
+                                        <option value="Other">Other</option>
+                                    </select>
+                                    <label for="industry">Industry</label>
+                                </div>
+
+                                <div class="form-check mb-4">
+                                    <input name="AgreeToTerms" class="form-check-input" type="checkbox" value="true" id="agreeTermsEmployer" />
+                                    <label class="form-check-label" for="agreeTermsEmployer">
+                                        I agree to the <a href="#" class="text-success">Terms of Service</a> and <a href="#" class="text-success">Privacy Policy</a>
+                                    </label>
+                                </div>
+
+                                <button class="w-100 btn btn-lg btn-success mb-3" type="submit">Create Company Account</button>
+                            </form>
+                        </div>
+                    </div>
+
+                    <div class="text-center mt-4">
+                        <p class="mb-0">Already have an account? <a asp-action="Login" class="text-success">Sign in</a></p>
+                    </div>
+
+                    <div class="text-center mt-3">
+                        <span class="text-muted">Or continue with</span>
+                    </div>
+                    
+                    <div class="d-grid gap-2 mt-3">
+                        <button type="button" class="btn btn-outline-secondary">
+                            <i class="bi bi-facebook me-2"></i> Facebook
+                        </button>
+                        <button type="button" class="btn btn-outline-secondary">
+                            <i class="bi bi-google me-2"></i> Google
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

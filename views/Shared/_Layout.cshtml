@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - JobRecruitment</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.7.2/font/bootstrap-icons.css" rel="stylesheet">
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/JobRecruitment.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header class="sticky-top bg-white border-bottom">
+        <nav class="navbar navbar-expand-lg navbar-light">
+            <div class="container">
+                <a class="navbar-brand fw-bold text-success fs-4" asp-controller="Home" asp-action="Index">Job Magnet</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav me-auto">
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Index">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Jobs" asp-action="Index">Jobs</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Companies" asp-action="Index">Companies</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Posts" asp-action="Index">Posts</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="About">About</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="Home" asp-action="Contact">Contact</a>
+                        </li>
+                    </ul>
+                    <partial name="_LoginPartial" />
+                </div>
+            </div>
+        </nav>
+    </header>
+
+    <main role="main">
+        @RenderBody()
+    </main>
+
+    <footer class="footer text-white">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-4 mb-4 mb-lg-0">
+                    <h5 class="text-uppercase mb-4">Job Magnet</h5>
+                    <p class="text-white-50">Connect with top employers and discover opportunities that match your skills and aspirations.</p>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                    <h6 class="text-uppercase mb-4">Quick Links</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a asp-controller="Home" asp-action="About" class="footer-link">About Us</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Contact" class="footer-link">Contact</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Privacy" class="footer-link">Privacy Policy</a></li>
+                        <li class="mb-2"><a asp-controller="Home" asp-action="Terms" class="footer-link">Terms of Service</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-2 col-md-6 mb-4 mb-lg-0">
+                    <h6 class="text-uppercase mb-4">For Job Seekers</h6>
+                    <ul class="list-unstyled">
+                        <li class="mb-2"><a asp-controller="Jobs" asp-action="Index" class="footer-link">Browse Jobs</a></li>
+                        <li class="mb-2"><a asp-controller="Companies" asp-action="Index" class="footer-link">Companies</a></li>
+                        <li class="mb-2"><a asp-controller="Blog" asp-action="Career" class="footer-link">Career Advice</a></li>
+                        <li class="mb-2"><a asp-controller="Blog" asp-action="Resume" class="footer-link">Resume Tips</a></li>
+                    </ul>
+                </div>
+                <div class="col-lg-4 col-md-6">
+                    <h6 class="text-uppercase mb-4">Newsletter</h6>
+                    <p class="text-white-50 mb-4">Subscribe to our newsletter for the latest job updates.</p>
+                    <form asp-controller="Newsletter" asp-action="Subscribe" method="post">
+                        <div class="input-group mb-3">
+                            <input type="email" name="email" class="form-control" placeholder="Enter your email" required>
+                            <button class="btn btn-outline-light" type="submit">Subscribe</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+            <hr class="my-4 opacity-25">
+            <div class="row align-items-center">
+                <div class="col-md-6 text-center text-md-start">
+                    <p class="mb-0 text-white-50">&copy; @DateTime.Now.Year Job Magnet. All rights reserved.</p>
+                </div>
+                <div class="col-md-6 text-center text-md-end">
+                    <a href="#" class="footer-link me-4"><i class="bi bi-facebook"></i></a>
+                    <a href="#" class="footer-link me-4"><i class="bi bi-twitter-x"></i></a>
+                    <a href="#" class="footer-link me-4"><i class="bi bi-linkedin"></i></a>
+                    <a href="#" class="footer-link"><i class="bi bi-instagram"></i></a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

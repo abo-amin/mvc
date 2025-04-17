@@ -1,0 +1,137 @@
+@model DashboardViewModel
+@{
+    ViewData["Title"] = "Dashboard";
+}
+
+<div class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1 class="mb-0">My Account</h1>
+        <div class="btn-group" role="group">
+            <input type="radio" class="btn-check" name="accountType" id="jobseeker" autocomplete="off" checked>
+            <label class="btn btn-outline-success" for="jobseeker">
+                <i class="bi bi-person me-1"></i> Job Seeker
+            </label>
+            <input type="radio" class="btn-check" name="accountType" id="employer" autocomplete="off">
+            <label class="btn btn-outline-success" for="employer">
+                <i class="bi bi-building me-1"></i> Employer
+            </label>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Sidebar -->
+        <div class="col-md-3">
+            <div class="card mb-4 shadow-sm">
+                <div class="card-body text-center">
+                    <img src="@(string.IsNullOrEmpty(Model.User.ProfileImage) ? "/images/avatar-placeholder.png" : Model.User.ProfileImage)" alt="Profile picture" class="rounded-circle img-fluid mb-3" style="width: 120px; height: 120px; object-fit: cover;">
+                    <h5 class="mb-1">@Model.User.FirstName @Model.User.LastName</h5>
+                    <p class="text-muted mb-1">@(string.IsNullOrEmpty(Model.User.Title) ? "Your Job Title" : Model.User.Title)</p>
+                    <p class="text-muted small mb-3">@(string.IsNullOrEmpty(Model.User.Location) ? "Your Location" : Model.User.Location)</p>
+                    <button class="btn btn-outline-success btn-sm w-100">Edit Profile</button>
+                </div>
+            </div>
+
+            <div class="card shadow-sm">
+                <div class="list-group list-group-flush">
+                    <a href="#" class="list-group-item list-group-item-action active" aria-current="true">
+                        <i class="bi bi-person me-2"></i> Profile
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="bi bi-briefcase me-2"></i> Applications
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="bi bi-bookmark me-2"></i> Saved Jobs
+                    </a>
+                    <a href="#" class="list-group-item list-group-item-action">
+                        <i class="bi bi-gear me-2"></i> Settings
+                    </a>
+                    <form asp-controller="Account" asp-action="Logout" method="post">
+                        <button type="submit" class="list-group-item list-group-item-action text-danger">
+                            <i class="bi bi-box-arrow-right me-2"></i> Logout
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="col-md-9">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <ul class="nav nav-tabs" id="dashboardTabs" role="tablist">
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link active" id="profile-tab" data-bs-toggle="tab" data-bs-target="#profile" type="button" role="tab" aria-controls="profile" aria-selected="true">Profile</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="resume-tab" data-bs-toggle="tab" data-bs-target="#resume" type="button" role="tab" aria-controls="resume" aria-selected="false">Resume</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="preferences-tab" data-bs-toggle="tab" data-bs-target="#preferences" type="button" role="tab" aria-controls="preferences" aria-selected="false">Job Preferences</button>
+                        </li>
+                        <li class="nav-item" role="presentation">
+                            <button class="nav-link" id="notifications-tab" data-bs-toggle="tab" data-bs-target="#notifications" type="button" role="tab" aria-controls="notifications" aria-selected="false">Notifications</button>
+                        </li>
+                    </ul>
+
+                    <div class="tab-content p-3" id="dashboardTabContent">
+                        <div class="tab-pane fade show active" id="profile" role="tabpanel" aria-labelledby="profile-tab">
+                            <h4 class="mb-4">Personal Information</h4>
+                            <form>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="firstName" class="form-label">First Name</label>
+                                        <input type="text" class="form-control" id="firstName" value="@Model.User.FirstName">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="lastName" class="form-label">Last Name</label>
+                                        <input type="text" class="form-control" id="lastName" value="@Model.User.LastName">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="email" class="form-label">Email</label>
+                                        <input type="email" class="form-control" id="email" value="@Model.User.Email">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="phone" class="form-label">Phone</label>
+                                        <input type="tel" class="form-control" id="phone" value="@Model.User.PhoneNumber">
+                                    </div>
+                                </div>
+                                <div class="row mb-3">
+                                    <div class="col-md-6">
+                                        <label for="location" class="form-label">Location</label>
+                                        <input type="text" class="form-control" id="location" value="@Model.User.Location">
+                                    </div>
+                                    <div class="col-md-6">
+                                        <label for="title" class="form-label">Job Title</label>
+                                        <input type="text" class="form-control" id="title" value="@Model.User.Title">
+                                    </div>
+                                </div>
+                                <div class="mb-3">
+                                    <label for="bio" class="form-label">Bio</label>
+                                    <textarea class="form-control" id="bio" rows="4">@Model.User.Bio</textarea>
+                                </div>
+                                <button type="submit" class="btn btn-success float-end">Save Changes</button>
+                            </form>
+                        </div>
+                        <div class="tab-pane fade" id="resume" role="tabpanel" aria-labelledby="resume-tab">
+                            <!-- Resume content would go here -->
+                            <h4 class="mb-4">Resume</h4>
+                            <p>Resume content would be displayed here.</p>
+                        </div>
+                        <div class="tab-pane fade" id="preferences" role="tabpanel" aria-labelledby="preferences-tab">
+                            <!-- Job preferences content would go here -->
+                            <h4 class="mb-4">Job Preferences</h4>
+                            <p>Job preferences content would be displayed here.</p>
+                        </div>
+                        <div class="tab-pane fade" id="notifications" role="tabpanel" aria-labelledby="notifications-tab">
+                            <!-- Notifications content would go here -->
+                            <h4 class="mb-4">Notification Settings</h4>
+                            <p>Notification settings would be displayed here.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

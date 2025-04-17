@@ -1,0 +1,183 @@
+@model HomeViewModel
+@{
+    ViewData["Title"] = "Home Page";
+}
+
+<!-- Hero Section -->
+<section class="position-relative bg-dark text-white py-5">
+    <div class="container">
+        <div class="row align-items-center">
+            <div class="col-md-6">
+                <h1 class="display-4 fw-bold mb-4">Find Your Dream Job Today</h1>
+                <p class="lead mb-4">Connect with top employers and discover opportunities that match your skills and aspirations.</p>
+                <div class="d-flex flex-column flex-sm-row gap-3">
+                    <a asp-controller="Jobs" asp-action="Index" class="btn btn-success btn-lg">Find Jobs</a>
+                    <a asp-controller="Posts" asp-action="Create" class="btn btn-outline-light btn-lg">Post a Job</a>
+                </div>
+            </div>
+            <div class="col-lg-6 d-none d-lg-block">
+                <img src="~/images/hero-image.jpg" alt="Job search illustration" class="img-fluid rounded shadow-lg">
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- Search Panel -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="card shadow-sm p-4 mb-5 bg-white rounded">
+            <h2 class="h4 mb-4">Find Your Perfect Job</h2>
+            <form asp-controller="Jobs" asp-action="Index" method="get">
+                <div class="row g-3">
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-search"></i></span>
+                            <input type="text" name="query" class="form-control" placeholder="Job title or keywords">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-building"></i></span>
+                            <input type="text" name="company" class="form-control" placeholder="Company or industry">
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="input-group">
+                            <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                            <input type="text" name="location" class="form-control" placeholder="Location">
+                        </div>
+                    </div>
+                    <div class="col-12 text-end">
+                        <button type="submit" class="btn btn-success">Search Jobs</button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Jobs -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h3">Featured Jobs</h2>
+            <a asp-controller="Jobs" asp-action="Index" class="text-success text-decoration-none">
+                View all jobs <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+        
+        <div class="row g-4">
+            @foreach (var job in Model.FeaturedJobs)
+            {
+                <div class="col-md-6 col-lg-3">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body">
+                            <div class="d-flex justify-content-between mb-3">
+                                <img src="@(string.IsNullOrEmpty(job.Logo) ? "/images/placeholder.png" : job.Logo)" alt="@job.Company" width="40" height="40" class="rounded border">
+                                <span class="badge bg-light text-success">@job.Type</span>
+                            </div>
+                            <h3 class="h5 card-title">@job.Title</h3>
+                            <p class="text-muted">@job.Company</p>
+                            <div class="small text-muted">
+                                <div class="mb-1"><i class="bi bi-geo-alt me-1"></i> @job.Location</div>
+                                <div class="mb-1"><i class="bi bi-currency-dollar me-1"></i> @job.Salary</div>
+                                <div><i class="bi bi-clock me-1"></i> @(job.Posted.ToShortDateString())</div>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- Featured Companies -->
+<section class="py-5 bg-light">
+    <div class="container">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h2 class="h3">Featured Companies</h2>
+            <a asp-controller="Companies" asp-action="Index" class="text-success text-decoration-none">
+                View all companies <i class="bi bi-chevron-right"></i>
+            </a>
+        </div>
+        
+        <div class="row g-4">
+            @foreach (var company in Model.FeaturedCompanies)
+            {
+                <div class="col-md-6 col-lg-4">
+                    <div class="card h-100 shadow-sm hover-card">
+                        <div class="card-body d-flex align-items-center">
+                            <img src="@(string.IsNullOrEmpty(company.Logo) ? "/images/placeholder.png" : company.Logo)" alt="@company.Name" width="60" height="60" class="rounded border me-3">
+                            <div>
+                                <h3 class="h5 card-title mb-1">@company.Name</h3>
+                                <p class="text-muted small mb-1">@company.Industry</p>
+                                <p class="text-muted small mb-1">@company.Location</p>
+                                <p class="text-success small mb-0">@company.OpenPositions open positions</p>
+                            </div>
+                        </div>
+                        <div class="card-footer bg-white border-top-0">
+                            <a asp-controller="Companies" asp-action="Details" asp-route-id="@company.Id" class="stretched-link"></a>
+                        </div>
+                    </div>
+                </div>
+            }
+        </div>
+    </div>
+</section>
+
+<!-- About the Site -->
+<section class="py-5 bg-white">
+    <div class="container">
+        <div class="text-center mb-5">
+            <h2 class="h3 mb-4">About Job Magnet</h2>
+            <p class="lead text-muted mx-auto" style="max-width: 800px;">
+                Job Magnet is a leading job recruitment platform connecting talented professionals with top employers worldwide. 
+                Our mission is to simplify the job search process and help companies find the perfect candidates.
+            </p>
+        </div>
+        
+        <div class="row g-4 justify-content-center">
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm text-center p-4">
+                    <div class="rounded-circle bg-light p-3 d-inline-flex mx-auto mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-briefcase text-success fs-3 m-auto"></i>
+                    </div>
+                    <h3 class="h5">Find Jobs</h3>
+                    <p class="text-muted">Discover thousands of job opportunities across various industries.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm text-center p-4">
+                    <div class="rounded-circle bg-light p-3 d-inline-flex mx-auto mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-building text-success fs-3 m-auto"></i>
+                    </div>
+                    <h3 class="h5">Company Profiles</h3>
+                    <p class="text-muted">Research companies and find the perfect cultural fit for your career.</p>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 shadow-sm text-center p-4">
+                    <div class="rounded-circle bg-light p-3 d-inline-flex mx-auto mb-3" style="width: 70px; height: 70px;">
+                        <i class="bi bi-person text-success fs-3 m-auto"></i>
+                    </div>
+                    <h3 class="h5">Career Resources</h3>
+                    <p class="text-muted">Access tips, guides, and resources to advance your professional journey.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.hover-card').hover(
+                function() { $(this).addClass('shadow'); },
+                function() { $(this).removeClass('shadow'); }
+            );
+        });
+    </script>
+}

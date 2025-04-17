@@ -1,0 +1,104 @@
+@model PostsViewModel
+@{
+    ViewData["Title"] = "Career Insights & Advice";
+}
+
+<div class="container py-5">
+    <h1 class="mb-4">Career Insights & Advice</h1>
+
+    <!-- Search and Filter -->
+    <div class="row mb-4">
+        <div class="col-md-8">
+            <form asp-controller="Posts" asp-action="Index" method="get" class="d-flex">
+                <div class="input-group me-2">
+                    <span class="input-group-text"><i class="bi bi-search"></i></span>
+                    <input type="text" name="query" class="form-control" placeholder="Search articles..." value="@Model.Query">
+                </div>
+                <button type="submit" class="btn btn-outline-secondary me-2">Search</button>
+                <a asp-controller="Posts" asp-action="Create" class="btn btn-success">Create Post</a>
+            </form>
+        </div>
+    </div>
+
+    <!-- Categories Tabs -->
+    <ul class="nav nav-tabs mb-4">
+        <li class="nav-item">
+            <a class="nav-link @(string.IsNullOrEmpty(Model.Category) ? "active" : "")" asp-controller="Posts" asp-action="Index">All Posts</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.Category == "Career Advice" ? "active" : "")" asp-controller="Posts" asp-action="Index" asp-route-category="Career Advice">Career Advice</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.Category == "Interview Tips" ? "active" : "")" asp-controller="Posts" asp-action="Index" asp-route-category="Interview Tips">Interview Tips</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.Category == "Resume Building" ? "active" : "")" asp-controller="Posts" asp-action="Index" asp-route-category="Resume Building">Resume Building</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.Category == "Salary Negotiation" ? "active" : "")" asp-controller="Posts" asp-action="Index" asp-route-category="Salary Negotiation">Salary Negotiation</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link @(Model.Category == "Remote Work" ? "active" : "")" asp-controller="Posts" asp-action="Index" asp-route-category="Remote Work">Remote Work</a>
+        </li>
+    </ul>
+
+    <!-- Posts Grid -->
+    <div class="row g-4">
+        @foreach (var post in Model.Posts)
+        {
+            <div class="col-md-6 col-lg-4">
+                <div class="card h-100 shadow-sm">
+                    <img src="@(string.IsNullOrEmpty(post.Image) ? "/images/placeholder.png" : post.Image)" class="card-img-top" alt="@post.Title" style="height: 200px; object-fit: cover;">
+                    <div class="card-body">
+                        <span class="badge bg-success mb-2">@post.Category</span>
+                        <h5 class="card-title">
+                            <a asp-controller="Posts" asp-action="Details" asp-route-id="@post.Id" class="text-decoration-none text-dark stretched-link">@post.Title</a>
+                        </h5>
+                        <p class="card-text text-muted">@post.Excerpt</p>
+                    </div>
+                    <div class="card-footer bg-white">
+                        <div class="d-flex justify-content-between align-items-center">
+                            <div class="d-flex align-items-center">
+                                <img src="@(string.IsNullOrEmpty(post.Author.Avatar) ? "/images/avatar-placeholder.png" : post.Author.Avatar)" alt="@post.Author.Name" class="rounded-circle me-2" width="32" height="32">
+                                <div>
+                                    <small class="text-muted">@post.Author.Name</small>
+                                    <small class="text-muted d-block">@post.Author.Role</small>
+                                </div>
+                            </div>
+                            <small class="text-muted">@post.ReadTime</small>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        }
+    </div>
+
+    <!-- Pagination -->
+    @if (Model.TotalPages > 1)
+    {
+        <nav aria-label="Page navigation" class="mt-4">
+            <ul class="pagination justify-content-center">
+                @if (Model.CurrentPage > 1)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Posts" asp-action="Index" asp-route-query="@Model.Query" asp-route-category="@Model.Category" asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+                    </li>
+                }
+                
+                @for (int i = 1; i <= Model.TotalPages; i++)
+                {
+                    <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                        <a class="page-link" asp-controller="Posts" asp-action="Index" asp-route-query="@Model.Query" asp-route-category="@Model.Category" asp-route-page="@i">@i</a>
+                    </li>
+                }
+                
+                @if (Model.CurrentPage < Model.TotalPages)
+                {
+                    <li class="page-item">
+                        <a class="page-link" asp-controller="Posts" asp-action="Index" asp-route-query="@Model.Query" asp-route-category="@Model.Category" asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+                    </li>
+                }
+            </ul>
+        </nav>
+    }
+</div>

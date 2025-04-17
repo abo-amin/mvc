@@ -1,0 +1,239 @@
+@model JobsViewModel
+@{
+    ViewData["Title"] = "Jobs";
+}
+
+<div class="container py-5">
+    <h1 class="mb-4">Find Your Perfect Job</h1>
+
+    <!-- Search Bar -->
+    <div class="card shadow-sm mb-5">
+        <div class="card-body">
+            <form asp-controller="Jobs" asp-action="Index" method="get" class="row g-3">
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-search"></i></span>
+                        <input type="text" name="query" class="form-control" value="@Model.Query" placeholder="Job title, keywords, or company">
+                    </div>
+                </div>
+                <div class="col-md-5">
+                    <div class="input-group">
+                        <span class="input-group-text"><i class="bi bi-geo-alt"></i></span>
+                        <input type="text" name="location" class="form-control" value="@Model.Location" placeholder="Location or remote">
+                    </div>
+                </div>
+                <div class="col-md-2">
+                    <button type="submit" class="btn btn-success w-100">Search</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Filters Sidebar -->
+        <div class="col-lg-3 mb-4">
+            <div class="card shadow-sm">
+                <div class="card-header bg-white">
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h5 class="mb-0">Filters</h5>
+                        <a href="@Url.Action("Index", "Jobs")" class="text-success small">Clear All</a>
+                    </div>
+                </div>
+                <div class="card-body">
+                    <form id="filter-form" method="get">
+                        @if (!string.IsNullOrEmpty(Model.Query))
+                        {
+                            <input type="hidden" name="query" value="@Model.Query">
+                        }
+                        @if (!string.IsNullOrEmpty(Model.Location))
+                        {
+                            <input type="hidden" name="location" value="@Model.Location">
+                        }
+
+                        <!-- Job Type Filter -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Job Type</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="fulltime" name="type" value="Full-time" @(Model.JobType == "Full-time" ? "checked" : "")>
+                                <label class="form-check-label" for="fulltime">Full-time</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="parttime" name="type" value="Part-time" @(Model.JobType == "Part-time" ? "checked" : "")>
+                                <label class="form-check-label" for="parttime">Part-time</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="contract" name="type" value="Contract" @(Model.JobType == "Contract" ? "checked" : "")>
+                                <label class="form-check-label" for="contract">Contract</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="internship" name="type" value="Internship" @(Model.JobType == "Internship" ? "checked" : "")>
+                                <label class="form-check-label" for="internship">Internship</label>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Experience Level Filter -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Experience Level</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="entry-level" name="experience" value="Entry Level">
+                                <label class="form-check-label" for="entry-level">Entry Level</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="mid-level" name="experience" value="Mid Level">
+                                <label class="form-check-label" for="mid-level">Mid Level</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="senior-level" name="experience" value="Senior Level">
+                                <label class="form-check-label" for="senior-level">Senior Level</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="director" name="experience" value="Director">
+                                <label class="form-check-label" for="director">Director</label>
+                            </div>
+                        </div>
+
+                        <hr>
+
+                        <!-- Salary Range Filter -->
+                        <div class="mb-4">
+                            <h6 class="fw-bold mb-3">Salary Range</h6>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="range-1" name="salary" value="0-50000">
+                                <label class="form-check-label" for="range-1">$0 - $50K</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="range-2" name="salary" value="50000-100000">
+                                <label class="form-check-label" for="range-2">$50K - $100K</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="range-3" name="salary" value="100000-150000">
+                                <label class="form-check-label" for="range-3">$100K - $150K</label>
+                            </div>
+                            <div class="form-check mb-2">
+                                <input class="form-check-input" type="checkbox" id="range-4" name="salary" value="150000-9999999">
+                                <label class="form-check-label" for="range-4">$150K+</label>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-success w-100">Apply Filters</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Job Listings -->
+        <div class="col-lg-9">
+            <div class="d-flex justify-content-between align-items-center mb-4">
+                <p class="mb-0">Showing @Model.Jobs.Count() jobs</p>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="sortDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                        <i class="bi bi-filter me-1"></i> Sort by: Newest
+                    </button>
+                    <ul class="dropdown-menu" aria-labelledby="sortDropdown">
+                        <li><a class="dropdown-item" href="#">Newest</a></li>
+                        <li><a class="dropdown-item" href="#">Salary (High to Low)</a></li>
+                        <li><a class="dropdown-item" href="#">Salary (Low to High)</a></li>
+                        <li><a class="dropdown-item" href="#">Job Title (A-Z)</a></li>
+                    </ul>
+                </div>
+            </div>
+
+            @if (!Model.Jobs.Any())
+            {
+                <div class="alert alert-info">
+                    <h4 class="alert-heading">No jobs found!</h4>
+                    <p>We couldn't find any jobs matching your search criteria. Try adjusting your filters or search terms.</p>
+                </div>
+            }
+            else
+            {
+                <div class="job-list">
+                    @foreach (var job in Model.Jobs)
+                    {
+                        <div class="card shadow-sm mb-4 job-card">
+                            <div class="card-body">
+                                <div class="row">
+                                    <div class="col-md-2 col-lg-1 mb-3 mb-md-0">
+                                        <img src="@(string.IsNullOrEmpty(job.Logo) ? "/images/placeholder.png" : job.Logo)" alt="@job.Company" class="img-fluid rounded" style="max-width: 60px;">
+                                    </div>
+                                    <div class="col-md-7 col-lg-8">
+                                        <div class="d-flex align-items-start justify-content-between mb-2">
+                                            <div>
+                                                <h2 class="h5 mb-1">
+                                                    <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="text-decoration-none text-dark job-title">@job.Title</a>
+                                                </h2>
+                                                <p class="mb-0 text-muted">@job.Company</p>
+                                            </div>
+                                            <span class="badge bg-light text-success">@job.Type</span>
+                                        </div>
+                                        <p class="mb-3 text-muted small">@(job.Description.Length > 150 ? job.Description.Substring(0, 150) + "..." : job.Description)</p>
+                                        <div class="d-flex flex-wrap gap-3 text-muted small">
+                                            <div><i class="bi bi-geo-alt me-1"></i> @job.Location</div>
+                                            <div><i class="bi bi-currency-dollar me-1"></i> @job.Salary</div>
+                                            <div><i class="bi bi-clock me-1"></i> @(((DateTime.Now - job.Posted).Days > 0) ? $"{(DateTime.Now - job.Posted).Days} days ago" : "Today")</div>
+                                        </div>
+                                    </div>
+                                    <div class="col-md-3 col-lg-3 d-flex flex-column justify-content-center align-items-md-end mt-3 mt-md-0">
+                                        <div class="d-flex gap-2 mb-2">
+                                            <button class="btn btn-outline-secondary btn-sm" title="Save job">
+                                                <i class="bi bi-bookmark"></i>
+                                            </button>
+                                            <a asp-controller="Jobs" asp-action="Details" asp-route-id="@job.Id" class="btn btn-success">Apply Now</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    }
+                </div>
+
+                <!-- Pagination -->
+                @if (Model.TotalPages > 1)
+                {
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            @if (Model.CurrentPage > 1)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-controller="Jobs" asp-action="Index" asp-route-query="@Model.Query" asp-route-location="@Model.Location" asp-route-type="@Model.JobType" asp-route-page="@(Model.CurrentPage - 1)">Previous</a>
+                                </li>
+                            }
+                            
+                            @for (int i = 1; i <= Model.TotalPages; i++)
+                            {
+                                <li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+                                    <a class="page-link" asp-controller="Jobs" asp-action="Index" asp-route-query="@Model.Query" asp-route-location="@Model.Location" asp-route-type="@Model.JobType" asp-route-page="@i">@i</a>
+                                </li>
+                            }
+                            
+                            @if (Model.CurrentPage < Model.TotalPages)
+                            {
+                                <li class="page-item">
+                                    <a class="page-link" asp-controller="Jobs" asp-action="Index" asp-route-query="@Model.Query" asp-route-location="@Model.Location" asp-route-type="@Model.JobType" asp-route-page="@(Model.CurrentPage + 1)">Next</a>
+                                </li>
+                            }
+                        </ul>
+                    </nav>
+                }
+            }
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('.job-card').hover(
+                function() { $(this).addClass('shadow'); },
+                function() { $(this).removeClass('shadow'); }
+            );
+            
+            // Filter form checkboxes
+            $('input[type="checkbox"]').change(function() {
+                $('#filter-form').submit();
+            });
+        });
+    </script>
+}

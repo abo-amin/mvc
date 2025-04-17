@@ -1,0 +1,178 @@
+@model Job
+@{
+    ViewData["Title"] = Model.Title;
+}
+
+<div class="container py-5">
+    @if (TempData["SuccessMessage"] != null)
+    {
+        <div class="alert alert-success alert-dismissible fade show" role="alert">
+            @TempData["SuccessMessage"]
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+        </div>
+    }
+
+    <div class="row">
+        <div class="col-lg-8">
+            <!-- Job Details -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <div class="d-flex align-items-center mb-4">
+                        <img src="@(string.IsNullOrEmpty(Model.Logo) ? "/images/placeholder.png" : Model.Logo)" alt="@Model.Company" class="rounded border me-3" style="width: 70px; height: 70px; object-fit: contain;">
+                        <div>
+                            <h1 class="h3 mb-1">@Model.Title</h1>
+                            <p class="mb-0 text-muted">@Model.Company</p>
+                        </div>
+                    </div>
+
+                    <div class="mb-4 d-flex flex-wrap gap-3">
+                        <span class="badge bg-light text-success px-3 py-2"><i class="bi bi-briefcase me-2"></i>@Model.Type</span>
+                        <span class="badge bg-light text-dark px-3 py-2"><i class="bi bi-geo-alt me-2"></i>@Model.Location</span>
+                        <span class="badge bg-light text-dark px-3 py-2"><i class="bi bi-currency-dollar me-2"></i>@Model.Salary</span>
+                        <span class="badge bg-light text-dark px-3 py-2"><i class="bi bi-clock me-2"></i>Posted @(((DateTime.Now - Model.Posted).Days > 0) ? $"{(DateTime.Now - Model.Posted).Days} days ago" : "Today")</span>
+                    </div>
+
+                    <div class="mb-4">
+                        <h5 class="mb-3">Job Description</h5>
+                        <div class="job-description">
+                            @Html.Raw(Model.Description)
+                        </div>
+                    </div>
+
+                    @if (Model.Requirements != null && Model.Requirements.Any())
+                    {
+                        <div class="mb-4">
+                            <h5 class="mb-3">Requirements</h5>
+                            <ul class="list-group list-group-flush">
+                                @foreach (var requirement in Model.Requirements)
+                                {
+                                    <li class="list-group-item bg-transparent ps-0"><i class="bi bi-check-circle-fill text-success me-2"></i> @requirement</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    @if (Model.Benefits != null && Model.Benefits.Any())
+                    {
+                        <div class="mb-4">
+                            <h5 class="mb-3">Benefits</h5>
+                            <ul class="list-group list-group-flush">
+                                @foreach (var benefit in Model.Benefits)
+                                {
+                                    <li class="list-group-item bg-transparent ps-0"><i class="bi bi-star-fill text-warning me-2"></i> @benefit</li>
+                                }
+                            </ul>
+                        </div>
+                    }
+
+                    <div class="d-flex gap-2 mt-4">
+                        <button id="saveJobBtn" class="btn btn-outline-success">
+                            <i class="bi bi-bookmark me-2"></i> Save Job
+                        </button>
+                        <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#applyModal">
+                            Apply Now
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-lg-4">
+            <!-- Company Info -->
+            <div class="card shadow-sm mb-4">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Company Information</h5>
+                    <div class="text-center mb-4">
+                        <img src="@(string.IsNullOrEmpty(Model.Logo) ? "/images/placeholder.png" : Model.Logo)" alt="@Model.Company" class="rounded mb-3" style="width: 100px; height: 100px; object-fit: contain;">
+                        <h6>@Model.Company</h6>
+                    </div>
+                    
+                    <div class="mb-3">
+                        <small class="text-muted d-block mb-1"><i class="bi bi-building me-2"></i> @(Model.CompanyObject?.Industry ?? "Industry not specified")</small>
+                        <small class="text-muted d-block mb-1"><i class="bi bi-geo-alt me-2"></i> @Model.Location</small>
+                        <small class="text-muted d-block mb-1"><i class="bi bi-people me-2"></i> @(Model.CompanyObject?.Size ?? "Company size not specified")</small>
+                        <small class="text-muted d-block"><i class="bi bi-calendar-event me-2"></i> Founded in @(Model.CompanyObject?.Founded.ToString() ?? "N/A")</small>
+                    </div>
+                    
+                    <a asp-controller="Companies" asp-action="Details" asp-route-id="@Model.CompanyId" class="btn btn-outline-success w-100">View Company Profile</a>
+                </div>
+            </div>
+
+            <!-- Similar Jobs -->
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title mb-4">Similar Jobs</h5>
+                    <div class="similar-jobs">
+                        <!-- This would be filled with actual similar jobs -->
+                        <div class="card mb-3 border">
+                            <div class="card-body p-3">
+                                <h6 class="card-title mb-1">Software Developer</h6>
+                                <p class="small text-muted mb-2">TechCorp • San Francisco, CA</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-light text-success">Full-time</span>
+                                    <small class="text-muted">3 days ago</small>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card mb-3 border">
+                            <div class="card-body p-3">
+                                <h6 class="card-title mb-1">Frontend Engineer</h6>
+                                <p class="small text-muted mb-2">InnovateLabs • Remote</p>
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <span class="badge bg-light text-success">Contract</span>
+                                    <small class="text-muted">1 day ago</small>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Apply Modal -->
+<div class="modal fade" id="applyModal" tabindex="-1" aria-labelledby="applyModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="applyModalLabel">Apply for @Model.Title</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <form asp-controller="Jobs" asp-action="Apply" asp-route-id="@Model.Id" method="post">
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="resume" class="form-label">Resume/CV</label>
+                        <input class="form-control" type="file" id="resume">
+                        <div class="form-text">Supported formats: PDF, DOC, DOCX (Max 5MB)</div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="coverLetter" class="form-label">Cover Letter</label>
+                        <textarea class="form-control" id="coverLetter" name="coverLetter" rows="6" placeholder="Explain why you're the perfect fit for this role..."></textarea>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                    <button type="submit" class="btn btn-success">Submit Application</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function() {
+            $('#saveJobBtn').click(function() {
+                // For now, just toggle the icon and text
+                if ($(this).find('i').hasClass('bi-bookmark')) {
+                    $(this).find('i').removeClass('bi-bookmark').addClass('bi-bookmark-fill');
+                    $(this).html('<i class="bi bi-bookmark-fill me-2"></i> Saved');
+                } else {
+                    $(this).find('i').removeClass('bi-bookmark-fill').addClass('bi-bookmark');
+                    $(this).html('<i class="bi bi-bookmark me-2"></i> Save Job');
+                }
+            });
+        });
+    </script>
+}
